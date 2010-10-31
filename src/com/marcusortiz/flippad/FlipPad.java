@@ -9,18 +9,29 @@ public class FlipPad
   private int index;
   private HashMap<String, Integer> idMap;
   
+  private enum Dir
+  {
+    NEXT, PREV;
+  }
+  
   public FlipPad()
   {
-    index = 0;
+    index = -1;
     mapIds();
   }
   
   public int next()
   {
-    int id = idMap.get(SYMBOLS[index % SYMBOLS.length]);
-    index++;
+    updateIndex(Dir.NEXT);
     
-    return id;
+    return idMap.get(SYMBOLS[index]);
+  }
+  
+  public int prev()
+  {
+    updateIndex(Dir.PREV);
+    
+    return idMap.get(SYMBOLS[index]);
   }
   
   private void mapIds()
@@ -32,5 +43,25 @@ public class FlipPad
     idMap.put(SYMBOLS[3], R.drawable.flip4);
     idMap.put(SYMBOLS[4], R.drawable.flip5);
     idMap.put(SYMBOLS[5], R.drawable.flip6);
+  }
+  
+  private void updateIndex(Dir dir)
+  {
+    if(dir == Dir.NEXT)
+    {
+      index++;
+      
+    }
+    else if(dir == Dir.PREV)
+    {
+      index--;
+    }
+    
+    if(index >= SYMBOLS.length){
+      index = 0;
+    }
+    else if(index < 0) {
+      index = SYMBOLS.length - 1;
+    }
   }
 }

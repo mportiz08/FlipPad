@@ -42,7 +42,15 @@ public class FlipPadActivity extends Activity
     public boolean onTouch(View v, MotionEvent event)
     {
       ImageView padView = (ImageView)v;
-      padView.setImageResource(pad.next());
+      
+      if(event.getY() < (padView.getHeight() / 2))
+      {
+        padView.setImageResource(pad.next());
+      }
+      else
+      {
+        padView.setImageResource(pad.prev());
+      }
       
       return false;
     }
