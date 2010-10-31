@@ -1,5 +1,6 @@
 package com.marcusortiz.flippad;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class FlipPad
@@ -7,6 +8,7 @@ public class FlipPad
   public final String[] SYMBOLS = {"1", "2", "3", "4", "5", "6"};
   
   private int index;
+  private String symbol;
   private HashMap<String, Integer> idMap;
   
   private enum Dir
@@ -20,18 +22,31 @@ public class FlipPad
     mapIds();
   }
   
+  public FlipPad(String sym)
+  {
+    index = Arrays.binarySearch(SYMBOLS, sym) - 1;
+    mapIds();
+  }
+  
+  public String getSymbol()
+  {
+    return symbol;
+  }
+  
   public int next()
   {
     updateIndex(Dir.NEXT);
+    symbol = SYMBOLS[index];
     
-    return idMap.get(SYMBOLS[index]);
+    return idMap.get(symbol);
   }
   
   public int prev()
   {
     updateIndex(Dir.PREV);
+    symbol = SYMBOLS[index];
     
-    return idMap.get(SYMBOLS[index]);
+    return idMap.get(symbol);
   }
   
   private void mapIds()
