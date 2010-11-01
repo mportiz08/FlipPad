@@ -3,7 +3,7 @@ package com.marcusortiz.flippad;
 import com.marcusortiz.flippad.R;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +12,9 @@ import android.widget.ImageView;
 
 public class FlipPadActivity extends Activity
 {
-  public static final String LAST_SYMBOL = "symbol";
+  public static final String LAST_SYMBOL = "LastSymbol";
+  public static final String PREFS = "FlipPadPreferences";
+  public static final String DEFAULT_SYMBOL = "1";
   
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -26,17 +28,10 @@ public class FlipPadActivity extends Activity
   private void initPad()
   {
     FlipPad pad;
-    Intent intent = getIntent();
-    String symbol = intent.getStringExtra(LAST_SYMBOL);
+    SharedPreferences settings = getSharedPreferences(PREFS, 0);
+    String symbol = settings.getString(LAST_SYMBOL, DEFAULT_SYMBOL);
     
-    if(symbol == null)
-    {
-      pad = new FlipPad();
-    }
-    else
-    {
-      pad = new FlipPad(symbol);  
-    }
+    pad = new FlipPad(symbol);
     
     ImageView padView = (ImageView)findViewById(R.id.PadView);
     
@@ -56,19 +51,21 @@ public class FlipPadActivity extends Activity
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
-      Intent intent = getIntent();
       ImageView padView = (ImageView)v;
+      SharedPreferences settings = getSharedPreferences(PREFS, 0);
+      SharedPreferences.Editor editor = settings.edit();
       
       if(event.getY() < (padView.getHeight() / 2))
       {
         padView.setImageResource(pad.next());
-        intent.putExtra(LAST_SYMBOL, pad.getSymbol());
       }
       else
       {
         padView.setImageResource(pad.prev());
-        intent.putExtra(LAST_SYMBOL, pad.getSymbol());
       }
+      
+      editor.putString(LAST_SYMBOL, pad.getSymbol());
+      editor.commit();
       
       return false;
     }
